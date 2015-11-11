@@ -37,6 +37,7 @@ void setup() {
   Serial.println(F("Connecting to the mesh..."));
   mesh.begin();
   Serial.println(F("Connected to the mesh!"));
+  lc[0] = {1,0,255,255,255};
 }
 void loop() {
   mesh.update();
@@ -71,17 +72,7 @@ void loop() {
         Serial.println("Received new LED Command from master:");
         led_command lc_tmp;
         network.read(header,&lc_tmp,sizeof(lc_tmp));
-        //Command received to string:
-        Serial.print("| LED ID: ");
-        Serial.print(lc_tmp.led_id);
-        Serial.print("| Red: ");
-        Serial.print(lc_tmp.R);
-        Serial.print("| Green: ");
-        Serial.print(lc_tmp.G);
-        Serial.print("| Blue: ");
-        Serial.print(lc_tmp.B);
-        Serial.print("| Pattern: ");
-        Serial.println(lc_tmp.pattern);
+        lc_to_string(&lc_tmp);
         //Set the led command
         set_led_command(&lc_tmp);
         break;
@@ -90,7 +81,7 @@ void loop() {
     }
   }
   if(millis() - display_timer > 40){ //Update LED patterns @25fps
-    //TO_DO update_leds();
+    update_leds();
     display_timer = millis();
   }
 }

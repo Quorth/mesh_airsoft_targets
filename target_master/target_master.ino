@@ -15,6 +15,10 @@
 #include "RF24Network.h"
 #include "RF24.h"
 #include "RF24Mesh.h"
+
+#define TARGET_MASTER
+#include "lib_target.h"
+
 #include <SPI.h>
 //Include eeprom.h for AVR (Uno, Nano) etc. except ATTiny
 #include <EEPROM.h>
@@ -30,6 +34,11 @@ void setup() {
   //Serial.println(mesh.getNodeID());
   // Connect to the mesh
   mesh.begin();
+  lc.led_id = 0;
+  lc.pattern = 1;
+  lc.R = 255;
+  lc.G = 0;
+  lc.B = 0;
 }
 void loop() {    
   // Call mesh.update to keep the network updated
@@ -49,12 +58,10 @@ void loop() {
     switch(header.type){
       // Display the incoming data from the targets
       case 'H': 
-	network.read(header,&dat,sizeof(dat));
+	network.read(header,0,0);
 	Serial.print("Received hit from node ");
         Serial.print(mesh.getNodeID(header.from_node));
-        Serial.print(" with status ");
-        Serial.println(dat);
-        
+        mesh.write(&lc,'C',sizeof(led_command),mesh.getNodeID(header.from_node));
 	break;
       default:
         network.read(header,&dat,sizeof(dat));
@@ -74,7 +81,7 @@ void loop() {
        Serial.print("NodeID: ");
        Serial.print(mesh.addrList[i].nodeID);
        Serial.print(" RF24Network Address: 0");
-       Serial.print(mesh.addrList[i].address,OCT);
+       Serial.println(mesh.addrList[i].address,OCT);
      }
     Serial.println(F("**********************************"));
   }
