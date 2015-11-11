@@ -6,7 +6,7 @@
 #include "RF24.h"
 #include "RF24Network.h"
 #include "RF24Mesh.h"
-
+#include <avr/wdt.h>
 #define TARGET_NODE
 #include "lib_target.h"
 
@@ -30,6 +30,7 @@ RF24Mesh mesh(radio, network);
 void setup() {
   
   Serial.begin(115200);
+  
   attachInterrupt(0,toggle,RISING);
   // Set the nodeID manually
   mesh.setNodeID(NODE_ID);
@@ -38,23 +39,27 @@ void setup() {
   mesh.begin();
   Serial.println(F("Connected to the mesh!"));
   lc[0] = {1,0,255,255,255};
+  wdt_enable(WDTO_250MS);
+  
 }
 void loop() {
+  wdt_reset();
   mesh.update();
   
   // If interruption triggered, flag is set
   // so notify the master
   if (int_flag) {
+    int_proc = 1;
     // Send an 'H' type message to notify a hit
     Serial.print("Hit received! Notifying to master... ");
     while (!mesh.write(0,'H',0)) {
+      Serial.println("[FAILED]");
       // If a write fails, check connectivity to the mesh network
       if (!mesh.checkConnection()) {
         //refresh the network address
-        Serial.println("[FAILED]");
         Serial.print("Renewing Address... ");
         mesh.renewAddress();
-        Serial.print("[OK]");
+        Serial.println("[OK]");
       } else {
         Serial.println("[FAIL]");
         Serial.println("Resending... ");
@@ -62,6 +67,8 @@ void loop() {
     }
     Serial.println("[OK]"); 
     int_flag = 0;
+    delay(50);
+    int_proc = 0;
   }
   
   while (network.available()) {
@@ -86,5 +93,5 @@ void loop() {
   }
 }
 void toggle(){
-    int_flag = !int_flag;   
+    int_flag = int_proc==1 ? 0 : 1;   
 }
