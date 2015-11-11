@@ -13,7 +13,15 @@ uint32_t display_timer=0;
 #define NODE_ID 2
 #define NUM_LEDS 1
 boolean int_flag = 0;
+uint8_t frame = 0;
 const int led_pinout[NUM_LEDS][3] = {{11,12,13}};
 led_command lc[NUM_LEDS];
+
+const uint8_t mask_frame[4][24] = {
+                                   {8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8},
+                                   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                   {0,0,0,0,0,0,0,0,0,0,0,0,8,8,8,8,8,8,8,8,8,8,8,8},
+                                   {0,0,0,0,0,0,8,8,8,8,8,8,0,0,0,0,0,0,8,8,8,8,8,8}
+                                  };
 
 #endif

@@ -40,6 +40,13 @@ boolean post_version(){
 }
 
 void update_leds(){
-  //TO_DO
+  frame = frame % 24;
+  for(int i=0; i<NUM_LEDS; i++){ //for each led
+    uint8_t shift_frame = mask_frame[lc[i].pattern][frame];
+    analogWrite(led_pinout[i][0],lc[i].R >> shift_frame);
+    analogWrite(led_pinout[i][1],lc[i].G >> shift_frame);
+    analogWrite(led_pinout[i][2],lc[i].B >> shift_frame);
+  }
+  frame++;  
 }
 #endif
