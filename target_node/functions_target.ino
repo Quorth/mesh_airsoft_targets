@@ -3,7 +3,7 @@
 /**************************************
 * Sets a received led command 
 **************************************/
-boolean set_led_command(led_command lc){
+boolean set_led_command(led_command* lc){
   //TO_DO
   return 0;
 }

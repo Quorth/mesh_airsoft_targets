@@ -65,6 +65,29 @@ void loop() {
   
   while (network.available()) {
     RF24NetworkHeader header;
+    network.peek(header);
+    switch(header.type){
+      case 'C':
+        Serial.println("Received new LED Command from master:");
+        led_command lc_tmp;
+        network.read(header,&lc_tmp,sizeof(lc_tmp));
+        //Command received to string:
+        Serial.print("| LED ID: ");
+        Serial.print(lc_tmp.led_id);
+        Serial.print("| Red: ");
+        Serial.print(lc_tmp.R);
+        Serial.print("| Green: ");
+        Serial.print(lc_tmp.G);
+        Serial.print("| Blue: ");
+        Serial.print(lc_tmp.B);
+        Serial.print("| Pattern: ");
+        Serial.println(lc_tmp.pattern);
+        //Set the led command
+        set_led_command(&lc_tmp);
+        break;
+      default:
+        break;
+    }
   }
 }
 void toggle(){
