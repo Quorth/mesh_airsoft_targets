@@ -32,7 +32,7 @@ void setup() {
   Serial.begin(115200);
   attachInterrupt(0,toggle,RISING);
   // Set the nodeID manually
-  mesh.setNodeID(nodeID);
+  mesh.setNodeID(NODE_ID);
   // Connect to the mesh
   Serial.println(F("Connecting to the mesh..."));
   mesh.begin();
@@ -88,6 +88,10 @@ void loop() {
       default:
         break;
     }
+  }
+  if(millis() - display_timer > 40){ //Update LED patterns @25fps
+    //TO_DO update_leds();
+    display_timer = millis();
   }
 }
 void toggle(){

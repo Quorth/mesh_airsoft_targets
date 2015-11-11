@@ -6,10 +6,11 @@ typedef struct {
   uint8_t B;
 } led_command;
 
+uint32_t display_timer=0;
 //Target node prototypes and declarations
 #ifdef TARGET_NODE
 
-#define nodeID 2
+#define NODE_ID 2
 #define NUM_LEDS 1
 boolean int_flag = 0;
 const int led_pinout[NUM_LEDS][3] = {{11,12,13}};
