@@ -26,20 +26,8 @@ RF24Mesh mesh(radio, network);
  * This will be stored in EEPROM on AVR devices, so remains persistent between further uploads, loss of power, etc.
  *
  **/
-#define nodeID 2
-#define NUM_LEDS 1
-boolean int_flag = 0;
-uint32_t displayTimer = 0;
-
-led_pinout lp[NUM_LEDS];
-led_command lc[NUM_LEDS];
 
 void setup() {
-  // Set pins for RGB leds connected to this node
-  // Led 1
-  lp[0].pin_R = 11;
-  lp[0].pin_G = 12;
-  lp[0].pin_B = 13;
   
   Serial.begin(115200);
   attachInterrupt(0,toggle,RISING);

@@ -9,10 +9,10 @@ typedef struct {
 //Target node prototypes and declarations
 #ifdef TARGET_NODE
 
-typedef struct {
-  uint8_t pin_R;
-  uint8_t pin_G;
-  uint8_t pin_B;
-} led_pinout ;
+#define nodeID 2
+#define NUM_LEDS 1
+boolean int_flag = 0;
+const int led_pinout[NUM_LEDS][3] = {{11,12,13}};
+led_command lc[NUM_LEDS];
 
 #endif
