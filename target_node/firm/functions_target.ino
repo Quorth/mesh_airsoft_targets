@@ -17,7 +17,7 @@ void lc_to_string(led_command* lc_tmp){
 * Sets a received led command 
 **************************************/
 boolean set_led_command(led_command* lc_tmp){
-  if (lc_tmp->pattern > 3) {
+  if (lc_tmp->pattern > NUM_ANIMATIONS - 1) {
     Serial.println("Pattern out of bounds. Corrupted data?");
     return false;
   }
@@ -41,16 +41,22 @@ boolean set_led_command(led_command* lc_tmp){
 * Quick function to turn all leds off 
 **************************************/
 boolean turn_off_all(){
-  //TO_DO
-  return 0;
+   for(int i=0; i<NUM_LEDS; i++){
+       lc[i].pattern = 0;
+   }
+   return 0;
 }
 /**************************************
 * Post requested led_command to master
 * NOTE: if led_id = 0, post led count
 *************************************/
 boolean post_led_command(uint8_t led_id){
-  //TO_DO
-  return 0;
+   if(led_id == 0){
+      return mesh.write(NUM_LEDS,'C',sizeof(int));
+   } else {
+      return mesh.write(lc[led_id],'G',sizeof(led_command));
+   }
+   return 0;
 }
 /**************************************
 * Post node version to master 

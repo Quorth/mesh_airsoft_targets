@@ -23,7 +23,7 @@
 //Include eeprom.h for AVR (Uno, Nano) etc. except ATTiny
 #include <EEPROM.h>
 /***** Configure the chosen CE,CS pins *****/
-RF24 radio(7,8);
+RF24 radio(14,15);
 RF24Network network(radio);
 RF24Mesh mesh(radio,network);
 uint32_t displayTimer = 0;

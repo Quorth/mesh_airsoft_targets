@@ -79,11 +79,33 @@ void loop() {
         Serial.println("Received new LED Command from master:");
         led_command lc_tmp;
         network.read(header,&lc_tmp,sizeof(lc_tmp));
-        lc_to_string(&lc_tmp);
         //Set the led command
         set_led_command(&lc_tmp);
         break;
+      case 'G':
+	int led_id = 0;
+	network.read(header,&led_id,sizeof(led_id));
+	Serial.print("Asked for LED command with LED id ");
+	Serial.println(led_id);
+	Serial.print("Sending data... ");
+	while(!post_led_command(led_id)){
+	   Serial.println("[FAIL]");
+	   Serial.print("Resending... ");
+	}
+	Serial.println("[OK]");
+	break;
+      case 'O':	
+	Serial.print("Received general OFF status from master. Turning off all leds...");
+	turn_off_all();
+	Serial.println("[OK]");
+	break;
+      case 'V':
+	Serial.print("Master asking for node version...");
+	post_version();
+	Serial.println("[OK]");
+	break;
       default:
+	Serial.println("Received unknown command. Corrupted frame?");
         break;
     }
   }
