@@ -83,8 +83,15 @@ void loop() {
         //Set the led command
         set_led_command(&lc_tmp);
         break;
+      case 'R':
+        Serial.print("Received address reset request. Renewing... ");
+        while(mesh.renewAddress() < 1){
+          Serial.println("[FAIL]");
+          Serial.print("Retrying... ");
+        }
+        Serial.println("[OK]");
+        break;
       case 'G':
-	
 	network.read(header,&led_id,sizeof(led_id));
 	Serial.print("Asked for LED command with LED id ");
 	Serial.println(led_id);
