@@ -53,7 +53,12 @@ void loop() {
   if(network.available()){
     RF24NetworkHeader header;
     network.peek(header);
-    
+    if(mesh.getNodeID(header.from_node) == 0){
+      Serial.print("Packet received with no address assigned. Requesting address renew...");
+      mesh.write(header.from_node,0,'R',0);
+      mesh.DHCP();
+      Serial.println("[OK]");
+    }
     uint32_t dat=0;
     switch(header.type){
       // Display the incoming data from the targets
