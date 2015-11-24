@@ -53,7 +53,7 @@ void loop() {
   if(network.available()){
     RF24NetworkHeader header;
     network.peek(header);
-    if(mesh.getNodeID(header.from_node) == 0){
+    if(mesh.getNodeID(header.from_node) == -1){
       Serial.print("Packet received with no address assigned. Requesting address renew...");
       mesh.write(header.from_node,0,'R',0);
       mesh.DHCP();
@@ -65,8 +65,8 @@ void loop() {
       case 'H': 
 	network.read(header,0,0);
 	Serial.print("Received hit from node ");
-        Serial.print(mesh.getNodeID(header.from_node));
-        mesh.write(&lc,'C',sizeof(led_command),mesh.getNodeID(header.from_node));
+        Serial.println(mesh.getNodeID(header.from_node));
+        mesh.write(header.from_node,&lc,'C',sizeof(led_command));
 	break;
       default:
         network.read(header,&dat,sizeof(dat));
