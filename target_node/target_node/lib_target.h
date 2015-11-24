@@ -10,7 +10,7 @@ unsigned long display_timer=0;
 //Target node prototypes and declarations
 #ifdef TARGET_NODE
 
-#define NODE_ID 2
+#define NODE_ID 1
 #define NUM_LEDS 1
 boolean int_flag = 0;
 boolean int_proc = 0;

@@ -14,7 +14,7 @@
 #include <EEPROM.h>
 //#include <printf.h>
 /**** Configure the nrf24l01 CE and CS pins ****/
-RF24 radio(7, 8);
+RF24 radio(14,15);
 RF24Network network(radio);
 RF24Mesh mesh(radio, network);
 /**
@@ -31,7 +31,7 @@ void setup() {
   
   Serial.begin(115200);
   
-  attachInterrupt(0,toggle,RISING);
+  attachInterrupt(0,toggle,FALLING);
   // Set the nodeID manually
   mesh.setNodeID(NODE_ID);
   // Connect to the mesh
@@ -73,6 +73,7 @@ void loop() {
   
   while (network.available()) {
     RF24NetworkHeader header;
+    int led_id = 0;
     network.peek(header);
     switch(header.type){
       case 'C':
@@ -83,7 +84,7 @@ void loop() {
         set_led_command(&lc_tmp);
         break;
       case 'G':
-	int led_id = 0;
+	
 	network.read(header,&led_id,sizeof(led_id));
 	Serial.print("Asked for LED command with LED id ");
 	Serial.println(led_id);
