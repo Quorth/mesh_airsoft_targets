@@ -38,7 +38,7 @@ void setup() {
   Serial.println(F("Connecting to the mesh..."));
   mesh.begin();
   Serial.println(F("Connected to the mesh!"));
-  lc[0] = {1,0,255,255,255};
+  //lc[0] = {1,0,255,255,255};
   wdt_enable(WDTO_250MS);
   
 }
@@ -67,7 +67,7 @@ void loop() {
     }
     Serial.println("[OK]"); 
     int_flag = 0;
-    delay(50);
+    delay(100);
     int_proc = 0;
   }
   
@@ -84,11 +84,9 @@ void loop() {
         set_led_command(&lc_tmp);
         break;
       case 'R':
+        network.read(header,0,0);
         Serial.print("Received address reset request. Renewing... ");
-        while(mesh.renewAddress() < 1){
-          Serial.println("[FAIL]");
-          Serial.print("Retrying... ");
-        }
+        mesh.renewAddress();
         Serial.println("[OK]");
         break;
       case 'G':

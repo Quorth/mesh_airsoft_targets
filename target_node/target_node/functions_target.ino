@@ -26,15 +26,17 @@ boolean set_led_command(led_command* lc_tmp){
   Serial.println("Setting new configuration");
   if(lc_tmp->led_id == 0){
     for(int i=0; i<NUM_LEDS; i++){
-      memcpy(&lc[i],&lc_tmp,sizeof(lc_tmp));
+      memcpy(&(lc[i]),lc_tmp,sizeof(led_command));
     }
   } else {
-    memcpy(&lc[lc_tmp->led_id - 1],&lc_tmp,sizeof(lc_tmp));
+    memcpy(&(lc[lc_tmp->led_id - 1]),lc_tmp,sizeof(led_command));
   }
-  Serial.println("New configuration:");
-  //Command received to string:
-  lc_to_string(lc_tmp);
   free(lc_tmp);
+  Serial.println("New configuration:");
+  for(int i=0; i<NUM_LEDS; i++){
+    //Command received to string:
+    lc_to_string(&lc[i]);
+  }
   return 1;
 }
 /**************************************
@@ -76,6 +78,7 @@ void update_leds(){
     analogWrite(led_pinout[i][2],lc[i].B >> shift_frame);
   }
   //Serial.print("Frame ");
-  //Serial.println(frame++);  
+  //Serial.println(frame++);
+  frame++;  
 }
 #endif
