@@ -27,6 +27,15 @@ const uint8_t mask_frame[NUM_ANIMATIONS][24] = {
                                   };
 
 #endif
+
 #ifdef TARGET_MASTER
+
 led_command lc;
+uint8_t game = 0;
+uint8_t game_state = 0;
+uint32_t time = 0;
+// Game 1 Variables
+uint8_t current = 0;
+const led_command lc_on = {0,1,0,255,0};
+
 #endif

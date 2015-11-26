@@ -43,22 +43,16 @@ void setup() {
 void loop() {    
   // Call mesh.update to keep the network updated
   mesh.update();
-  
   // In addition, keep the 'DHCP service' running on the master node so addresses will
   // be assigned to the sensor nodes
   mesh.DHCP();
   
-  
+/*  
   // Check for incoming data from the targets
   if(network.available()){
     RF24NetworkHeader header;
     network.peek(header);
-    if(mesh.getNodeID(header.from_node) == -1){
-      Serial.print("Packet received with no address assigned. Requesting address renew...");
-      mesh.write(header.from_node,0,'R',0);
-      mesh.DHCP();
-      Serial.println("[OK]");
-    }
+    check_address();
     uint32_t dat=0;
     switch(header.type){
       // Display the incoming data from the targets
@@ -77,6 +71,14 @@ void loop() {
 	break;
     }
  }
+ */
+  game_main();
+  
+  if(Serial.available()){
+    game = Serial.read() - 48;
+    Serial.print("Game mode set to ");
+    Serial.println(game);
+  }
   
   if(millis() - displayTimer > 5000){
     displayTimer = millis();

@@ -78,3 +78,44 @@ void update_leds(){
   //Serial.println(frame++);  
 }
 #endif
+
+#ifdef TARGET_MASTER
+/**************************************
+* Sends same led command to every target
+* on Address List
+**************************************/
+boolean broadcast_led_command(led_command lc){
+  boolean success = true;
+  for (int i=0; i < mesh.addrListTop; i++){
+    success &= mesh.write(mesh.addrList[i].address,&lc,'C',sizeof(led_command));
+  }
+  return success;
+}
+
+/**************************************
+* Turns off every target on Address List 
+**************************************/
+boolean broadcast_off(){
+  boolean success = true;
+  for (int i=0; i < mesh.addrListTop; i++){
+    success &= mesh.write(mesh.addrList[i].address,0,'O',0);
+  }
+  return success;
+}
+
+/**************************************
+* Checks if sender is on Address List
+**************************************/
+boolean check_address(RF24NetworkHeader header){
+    if(mesh.getNodeID(header.from_node) == -1){
+      Serial.print("Packet received with no address assigned. Requesting address renew...");
+      mesh.write(header.from_node,0,'R',0);
+      mesh.DHCP();
+      Serial.println("[OK]");
+      return false;
+    }
+    return true;
+}
+
+
+#endif
