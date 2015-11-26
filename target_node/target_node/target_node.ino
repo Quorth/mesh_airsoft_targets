@@ -52,7 +52,7 @@ void loop() {
     int_proc = 1;
     // Send an 'H' type message to notify a hit
     Serial.print("Hit received! Notifying to master... ");
-    while (!mesh.write(0,'H',0)) {
+    while (!mesh.write(&node_id,'H',sizeof(uint8_t))) {
       Serial.println("[FAILED]");
       // If a write fails, check connectivity to the mesh network
       if (!mesh.checkConnection()) {
@@ -102,16 +102,19 @@ void loop() {
 	break;
       case 'O':	
 	Serial.print("Received general OFF status from master. Turning off all leds...");
+	network.read(header,0,0);
 	turn_off_all();
 	Serial.println("[OK]");
 	break;
       case 'V':
 	Serial.print("Master asking for node version...");
+	network.read(header,0,0);
 	post_version();
 	Serial.println("[OK]");
 	break;
       default:
 	Serial.println("Received unknown command. Corrupted frame?");
+	network.read(header,0,0);
         break;
     }
   }

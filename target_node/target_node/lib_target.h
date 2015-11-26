@@ -11,6 +11,7 @@ unsigned long display_timer=0;
 #ifdef TARGET_NODE
 
 #define NODE_ID 1
+const uint8_t node_id = NODE_ID;
 #define NUM_LEDS 1
 boolean int_flag = 0;
 boolean int_proc = 0;
